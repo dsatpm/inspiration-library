@@ -1,5 +1,4 @@
 import { craftFloor, designTypes } from './data/designTypes.js'
-import { bakeoffs } from './lib/bakeoffs.js'
 import { TypeSection } from './components/TypeSection.jsx'
 import styles from './App.module.css'
 
@@ -24,7 +23,6 @@ export function App() {
           <span className="tabular">{designTypes.length} types</span>
           <span className="tabular">{proven.length} with exemplars</span>
           <span className="tabular">{mechanicsCount} rules</span>
-          <span className="tabular">{bakeoffs.length} bakeoffs</span>
         </div>
         <nav className={styles.nav} aria-label="Design types">
           {designTypes.map((type) => (
@@ -60,28 +58,6 @@ export function App() {
         ))}
       </main>
 
-      {bakeoffs.length > 0 && (
-        <section className={styles.bakeoffs} aria-labelledby="bakeoffs">
-          <h2 id="bakeoffs" className={styles.floorTitle}>
-            Bakeoffs
-          </h2>
-          <ul className={styles.bakeoffList}>
-            {bakeoffs.map((bakeoff) => (
-              <li key={bakeoff.slug} className={styles.bakeoff}>
-                <a className={styles.bakeoffLink} href={bakeoff.href}>
-                  {bakeoff.title}
-                </a>
-                <span className={`${styles.bakeoffDate} tabular`}>
-                  {bakeoff.generated}
-                </span>
-                <span className={styles.bakeoffDirections}>
-                  {bakeoff.directions.join(' · ')}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
     </div>
   )
 }

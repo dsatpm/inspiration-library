@@ -37,13 +37,22 @@ Rules that matter:
 - **A mechanic must be measurable or falsifiable.** "Nice hierarchy" is
   worthless. "Display serif near 8rem against 0.8rem labels — a 10:1 ratio"
   is usable. Name the mechanism: ratio, grid, contrast, easing, ordering.
+- **The type list mirrors the vault exactly** — one entry per folder in
+  `~/Screenshots/taste-vault/`. If a folder exists there and not here, the
+  registry is out of date, not the vault. Adding a type means adding a folder,
+  and vice versa.
 - A type with an empty `exemplars` array is **provisional** — its mechanics were
-  derived from the vocabulary, not read off a page. The app badges it. Harden it
-  the first time a real capture lands in its vault folder.
+  read off vault screenshots but no source site has been identified. The app
+  badges it. Fill in exemplars when the origin sites are known.
 - **If a capture does not clearly belong to an existing type, ask rather than
   guessing.** Inventing a near-duplicate type fragments the grouping. `SERIF
   NOIR` was coined for this archive; every other name came from the user.
-- Adding a type means adding a vault folder: `~/Screenshots/taste-vault/<id>/`.
+- `summary` is the field most worth rewriting by hand. It is the visual
+  description a brief is built from and it should read like art direction, not
+  like a tag list — the user owns it.
+- Folders accumulate off-type strays. Characterise a type from what dominates
+  its folder and report the outliers rather than widening the definition to
+  cover them.
 
 ## The vault
 
