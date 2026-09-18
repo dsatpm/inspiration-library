@@ -42,7 +42,8 @@ export function App() {
         <nav className={styles.nav} aria-label="Design types">
           {populated.map(({ type, items }) => (
             <a key={type.id} className={styles.navLink} href={`#${type.id}`}>
-              {type.name} · {items.length}
+              {type.name}
+              <span className={styles.navCount}>{items.length}</span>
             </a>
           ))}
         </nav>
@@ -59,11 +60,13 @@ export function App() {
         ))}
 
         {empty.length > 0 && (
-          <section className={styles.empty}>
+          <section className={styles.empty} aria-label="Design types with no captures yet">
             Defined, no captures yet
             <ul className={styles.emptyList}>
               {empty.map((type) => (
-                <li key={type.id}>{type.name}</li>
+                <li key={type.id} className={styles.emptyItem}>
+                  {type.name}
+                </li>
               ))}
             </ul>
           </section>

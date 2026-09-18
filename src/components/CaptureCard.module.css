@@ -1,23 +1,26 @@
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  padding: 0;
-  text-align: left;
   background: var(--ground-card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
-  cursor: pointer;
   transition:
-    border-color 120ms ease,
-    transform 120ms ease;
+    border-color 180ms var(--ease-out),
+    transform 180ms var(--ease-out),
+    box-shadow 180ms var(--ease-out);
 }
 
-.card:hover,
-.card:focus-visible {
-  border-color: var(--line-bright);
-  transform: translateY(-2px);
+.card:hover {
+  border-color: var(--line-control);
+  transform: translateY(-3px);
+  /* Offset and blur — a light source, not a halo. */
+  box-shadow: 0 10px 24px -8px rgb(0 0 0 / 70%);
+}
+
+.card:has(.trigger:focus-visible) {
+  border-color: var(--accent);
 }
 
 .thumb {
@@ -34,8 +37,8 @@
   object-position: top center;
 }
 
-/* Bottom-left design type, bottom-right position counter — both sit on a
-   scrim so they stay legible over any capture. */
+/* Design type and position sit on a scrim so they stay legible over captures
+   with cream or white grounds. */
 .thumbFoot {
   position: absolute;
   inset: auto 0 0 0;
@@ -43,7 +46,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--gap);
-  padding: 2.25rem 0.75rem 0.6rem;
+  padding: 2.25rem 0.8rem 0.65rem;
   background: linear-gradient(
     to top,
     rgb(0 0 0 / 96%) 0%,
@@ -56,15 +59,24 @@
   text-transform: uppercase;
 }
 
+/* Long type names truncate rather than collide with the counter. */
 .type {
   display: inline-flex;
   align-items: center;
-  gap: 0.4em;
+  gap: 0.45em;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: var(--accent);
 }
 
+.type svg {
+  flex-shrink: 0;
+}
+
 .count {
-  color: var(--ink-dim);
+  color: #c9c6c0;
   white-space: nowrap;
 }
 
@@ -72,40 +84,67 @@
   position: absolute;
   top: 0.6rem;
   left: 0.6rem;
-  padding: 0.15rem 0.45rem;
-  border-radius: 3px;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
   background: var(--warn);
-  color: #1a0d07;
+  color: var(--warn-ink);
   font-family: var(--font-mono);
   font-size: var(--step-1);
   font-weight: 700;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .body {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 0.85rem 0.9rem 1rem;
+  padding: 0.9rem 0.95rem 1.05rem;
 }
 
+/* Not `baseline`: the title wraps a <button>, whose inline-block baseline is
+   its LAST line, so a two-line title would drag the categories down with it. */
 .heading {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--gap);
+  gap: 0.75rem;
 }
 
 .title {
   margin: 0;
+  min-width: 0;
   font-size: var(--step-4);
   font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.15;
+  text-wrap: balance;
+}
+
+.trigger {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trigger::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+}
+
+.trigger:focus-visible {
+  outline: none;
 }
 
 .categories {
   flex-shrink: 0;
+  /* Optically seats the mono cap-height on the title's first baseline. */
+  margin-top: 0.36rem;
   font-family: var(--font-mono);
   font-size: var(--step-1);
   color: var(--ink-dim);
@@ -113,7 +152,9 @@
   text-align: right;
 }
 
+/* Tight to its title, generous before the tag group. */
 .site {
+  margin-top: 0.3rem;
   font-family: var(--font-mono);
   font-size: var(--step-1);
   color: var(--ink-faint);
@@ -123,14 +164,15 @@
 .tags {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.35rem;
-  margin: 0;
+  margin: 0.85rem 0 0;
   padding: 0;
   list-style: none;
 }
 
 .tag {
-  padding: 0.2rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   border: 1px solid var(--line);
   border-radius: 999px;
   font-size: var(--step-2);
@@ -138,7 +180,6 @@
 }
 
 .more {
-  align-self: center;
   font-family: var(--font-mono);
   font-size: var(--step-2);
   color: var(--accent);
@@ -147,7 +188,7 @@
 @media (max-width: 34rem) {
   .heading {
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.25rem;
   }
 
   .categories {

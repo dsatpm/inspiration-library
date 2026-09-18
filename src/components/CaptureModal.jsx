@@ -117,7 +117,7 @@ export function CaptureModal({ capture, onClose }) {
             >
               {capture.site}
             </a>
-            <span>{capture.sidecar}</span>
+            <span className={styles.path}>{capture.sidecar}</span>
           </div>
 
           <p className={styles.brief}>{capture.brief}</p>
@@ -151,7 +151,8 @@ export function CaptureModal({ capture, onClose }) {
               <span className={styles.subject}>
                 [SUBJECT: {capture.recipe.subject}]
               </span>
-              {capture.recipe.prompt.replace('[SUBJECT]', '')}
+              {' '}
+              {capture.recipe.prompt.split('[SUBJECT]')[1].trimStart()}
             </pre>
           </div>
 

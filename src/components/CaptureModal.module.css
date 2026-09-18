@@ -2,15 +2,40 @@
   width: min(64rem, calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
   padding: 0;
-  border: 1px solid var(--line-bright);
+  border: 1px solid var(--line-control);
   border-radius: var(--radius);
   background: var(--ground-raised);
   color: var(--ink);
   overflow: hidden;
+  box-shadow: 0 32px 80px -24px rgb(0 0 0 / 85%);
+}
+
+/* The one authored moment: the capture rises into place from an already
+   visible state, backdrop resolving with it. */
+.dialog[open] {
+  animation: lift 320ms var(--ease-out);
+}
+
+.dialog[open]::backdrop {
+  animation: veil 320ms var(--ease-out);
+}
+
+@keyframes lift {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.99);
+  }
+}
+
+@keyframes veil {
+  from {
+    opacity: 0;
+  }
 }
 
 .dialog::backdrop {
-  background: rgb(0 0 0 / 72%);
+  background: rgb(6 6 7 / 78%);
+  backdrop-filter: blur(3px);
 }
 
 .scroll {
@@ -39,9 +64,9 @@
 
 .heading {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--gap);
+  gap: 0.5rem var(--gap);
   flex-wrap: wrap;
 }
 
@@ -51,9 +76,11 @@
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.1;
+  text-wrap: balance;
 }
 
 .categories {
+  margin-top: 0.6rem;
   font-family: var(--font-mono);
   font-size: var(--step-2);
   color: var(--ink-dim);
@@ -80,11 +107,16 @@
 }
 
 .avoidChip {
-  padding: 0.15rem 0.45rem;
-  border-radius: 3px;
+  padding: 0.18rem 0.5rem;
+  border-radius: 4px;
   background: var(--warn);
-  color: #1a0d07;
+  color: var(--warn-ink);
   font-weight: 700;
+}
+
+.path {
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 
 .brief {
@@ -174,7 +206,7 @@
 
 .btn {
   padding: 0.6rem 1rem;
-  border: 1px solid var(--line-bright);
+  border: 1px solid var(--line-control);
   border-radius: 999px;
   background: transparent;
   font-family: var(--font-mono);
@@ -182,11 +214,15 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 120ms ease, color 120ms ease;
+  transition:
+    background 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    color 160ms var(--ease-out);
 }
 
 .btn:hover {
   background: var(--ground-card);
+  border-color: var(--line-bright);
 }
 
 .btnPrimary {

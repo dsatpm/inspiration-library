@@ -1,23 +1,30 @@
 :root {
   /* Two extreme type sizes and a mono label face — the pattern the archive
-     itself keeps demonstrating. */
+     itself keeps demonstrating. Mono is reserved for measured data here:
+     counts, indices, file paths. */
   --font-display: ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   --ground: #0b0b0c;
   --ground-raised: #131315;
   --ground-card: #17171a;
-  --line: #2a2a2f;
-  --line-bright: #3d3d45;
 
+  /* --line is decorative separation; --line-control bounds real controls and
+     clears 3:1 against every ground. */
+  --line: #2a2a2f;
+  --line-control: #666460;
+  --line-bright: #8a8780;
+
+  /* All three clear 4.5:1 on --ground-card, the lightest surface they sit on. */
   --ink: #f2f0ec;
   --ink-dim: #a3a09a;
-  --ink-faint: #6b6862;
+  --ink-faint: #83807b;
 
   /* One accent, reserved for actions and current state. */
   --accent: #d8ff3e;
   --accent-ink: #0b0b0c;
   --warn: #ff8a5c;
+  --warn-ink: #1a0d07;
 
   --step-1: 0.6875rem;
   --step-2: 0.8125rem;
@@ -29,7 +36,11 @@
   --gap: 1rem;
   --radius: 10px;
 
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
   color-scheme: dark;
+  accent-color: var(--accent);
+  scrollbar-color: var(--line-control) var(--ground);
 }
 
 * {
@@ -42,6 +53,10 @@ body {
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--ground);
   color: var(--ink);
@@ -49,15 +64,44 @@ body {
   font-size: var(--step-3);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Browser surfaces ship with defaults that belong to no design system. */
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ground);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line-control);
+  border: 3px solid var(--ground);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--line-bright);
 }
 
 button {
   font: inherit;
   color: inherit;
+  caret-color: var(--accent);
 }
 
 a {
   color: inherit;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: from-font;
 }
 
 img {
@@ -67,5 +111,26 @@ img {
 
 :focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Counts, indices and positions are measured values — keep the figures from
+   shifting width as they change. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
