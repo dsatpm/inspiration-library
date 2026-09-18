@@ -1,5 +1,5 @@
 ---
-source: unverified
+source: https://pear.no/
 brand: Pear
 captured: 2026-09-17
 category: landing-pages

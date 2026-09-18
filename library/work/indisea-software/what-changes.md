@@ -1,5 +1,5 @@
 ---
-source: https://indiseasoftware.com
+source: https://indisea.com/
 captured: 2026-09-17
 category: work
 verdict: adopt

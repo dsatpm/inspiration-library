@@ -1,5 +1,5 @@
 ---
-source: unverified
+source: https://newcastleartgallery.nsw.gov.au/
 brand: Newcastle Art Gallery
 captured: 2026-09-17
 category: landing-pages

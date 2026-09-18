@@ -1,0 +1,156 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  background: var(--ground-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    transform 120ms ease;
+}
+
+.card:hover,
+.card:focus-visible {
+  border-color: var(--line-bright);
+  transform: translateY(-2px);
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--ground-raised);
+  border-bottom: 1px solid var(--line);
+}
+
+.shot {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Bottom-left design type, bottom-right position counter — both sit on a
+   scrim so they stay legible over any capture. */
+.thumbFoot {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: 2.25rem 0.75rem 0.6rem;
+  background: linear-gradient(
+    to top,
+    rgb(0 0 0 / 96%) 0%,
+    rgb(0 0 0 / 88%) 45%,
+    transparent 100%
+  );
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.type {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  color: var(--accent);
+}
+
+.count {
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+.avoidFlag {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  background: var(--warn);
+  color: #1a0d07;
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.85rem 0.9rem 1rem;
+}
+
+.heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--step-4);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.categories {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  color: var(--ink-dim);
+  letter-spacing: 0.04em;
+  text-align: right;
+}
+
+.site {
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: var(--step-2);
+  color: var(--ink-dim);
+}
+
+.more {
+  align-self: center;
+  font-family: var(--font-mono);
+  font-size: var(--step-2);
+  color: var(--accent);
+}
+
+@media (max-width: 34rem) {
+  .heading {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .categories {
+    text-align: left;
+  }
+}

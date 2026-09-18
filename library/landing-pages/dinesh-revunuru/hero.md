@@ -1,5 +1,5 @@
 ---
-source: unverified
+source: https://dineshrevunuru.com/
 brand: Dinesh Revunuru
 captured: 2026-09-17
 category: landing-pages

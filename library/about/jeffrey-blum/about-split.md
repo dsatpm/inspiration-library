@@ -1,5 +1,5 @@
 ---
-source: https://blumjeffrey.com
+source: https://blumjeffrey.com/
 captured: 2026-09-17
 category: about
 verdict: adopt

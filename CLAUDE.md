@@ -12,11 +12,9 @@ Two directions of use:
 - **Positive reference** — patterns worth reproducing (`library/`).
 - **Negative reference** — patterns to avoid (`avoid/`), equally important. Never discard a bad example; file it.
 
-## Repository state
+## The browsing app
 
-The tracked code is an **unmodified Vite + React 19 scaffold** (`src/App.jsx` is still the Vite starter page). It has no relationship to the archive yet. Treat it as the shell for an optional local browsing UI over `library/` — do not assume any of it is intentional design work, and do not cite it as a style example.
-
-Stack: Vite 8, React 19 (React Compiler enabled via `@rolldown/plugin-babel` in `vite.config.js`), ESLint flat config. No TypeScript, no test runner, no Tailwind installed yet — adding any of those is a dependency decision, discuss first.
+`src/` is a local directory UI over the archive, grouped by **design type**. It is a reading tool for the library, not a design example in itself.
 
 ```bash
 npm run dev       # dev server
@@ -24,6 +22,46 @@ npm run build     # production build to dist/
 npm run preview   # serve the build
 npm run lint      # eslint .
 ```
+
+Stack: Vite 8, React 19 (React Compiler enabled via `@rolldown/plugin-babel` in `vite.config.js`), ESLint flat config, CSS Modules. No TypeScript, no test runner, no Tailwind — adding any of those is a dependency decision, discuss first. The app has no runtime dependencies beyond React.
+
+```
+src/
+  data/designTypes.js   # the genre registry: summary + vocabulary per type
+  data/captures.js      # one entry per capture — the app's whole content model
+  lib/images.js         # import.meta.glob over /library and /avoid
+  components/           # CaptureCard, CaptureModal, TypeSection, StarIcon
+```
+
+**`src/data/captures.js` is the file you edit most.** Every capture needs `image`,
+`sidecar`, `title`, `site`, `url`, `typeId`, `categories`, `tags`, `brief` and
+`recipe`. `image` is the repo-root-relative path (`/library/...`), resolved to a
+bundled URL by the glob in `src/lib/images.js` — the archive deliberately lives
+outside `src/`, so the glob reaches up to the project root.
+
+Adding a capture is two steps: file the `.png` + `.md` under `library/`, then add
+the entry to `captures.js`. Nothing is derived from the sidecars at build time;
+the sidecar is the durable record and `captures.js` is the app's index of it.
+Keep them consistent by hand.
+
+### Design types
+
+Types are the app's top-level grouping and live in `src/data/designTypes.js`.
+Each has a `summary` (what the mode is) and a `vocabulary` list (the terms needed
+to brief or critique it). Types with no captures yet are still listed, so the
+vocabulary exists before an example arrives.
+
+**If a capture does not clearly belong to an existing type, ask rather than
+guessing.** Inventing a near-duplicate type fragments the grouping. `SERIF NOIR`
+was coined for this archive; every other type name came from the user.
+
+### Image recipes
+
+Each capture carries a `recipe` for regenerating comparable art:
+`recipe.subject` fills the `[SUBJECT]` slot in `recipe.prompt`, and the modal's
+**Copy image prompt** button emits the joined string for Higgsfield
+`gpt_image_2`. Prompts state a STRICT palette and reserve empty space for
+typography — keep that convention when writing new ones.
 
 ## Archive layout
 
