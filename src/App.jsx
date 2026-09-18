@@ -1,84 +1,86 @@
-import { useMemo, useState } from 'react'
-import { captures } from './data/captures.js'
-import { designTypes } from './data/designTypes.js'
+import { craftFloor, designTypes } from './data/designTypes.js'
+import { bakeoffs } from './lib/bakeoffs.js'
 import { TypeSection } from './components/TypeSection.jsx'
-import { CaptureModal } from './components/CaptureModal.jsx'
 import styles from './App.module.css'
 
 export function App() {
-  const [selected, setSelected] = useState(null)
-
-  const { populated, empty } = useMemo(() => {
-    const byType = new Map(designTypes.map((type) => [type.id, []]))
-    for (const capture of captures) byType.get(capture.typeId)?.push(capture)
-
-    return {
-      populated: designTypes
-        .map((type) => ({ type, items: byType.get(type.id) ?? [] }))
-        .filter((group) => group.items.length > 0),
-      empty: designTypes.filter((type) => (byType.get(type.id) ?? []).length === 0),
-    }
-  }, [])
-
-  const siteCount = new Set(captures.map((capture) => capture.site)).size
+  const proven = designTypes.filter((type) => type.exemplars.length > 0)
+  const mechanicsCount = designTypes.reduce(
+    (total, type) => total + type.mechanics.length + type.never.length,
+    0,
+  )
 
   return (
     <div className={styles.page}>
       <header className={styles.masthead}>
-        <h1 className={styles.title}>Inspiration Library</h1>
+        <h1 className={styles.title}>Design Types</h1>
         <p className={styles.standfirst}>
-          A local design reference archive, grouped by design type. Every capture
-          carries the transferable rule it demonstrates, the vocabulary to brief
-          it, and an image recipe you can send straight to Higgsfield.
+          The genre registry this archive briefs from. Each type states what the
+          mode is, the vocabulary to name its devices, the mechanics that make it
+          work, and the failures specific to it. Screenshots live outside this
+          repo — the rules are the durable record, not the pictures.
         </p>
         <div className={styles.stats}>
-          <span>{captures.length} captures</span>
-          <span>{siteCount} sites</span>
-          <span>{populated.length} design types</span>
-          <span>
-            {captures.filter((capture) => capture.verdict === 'avoid').length} avoid
-          </span>
+          <span className="tabular">{designTypes.length} types</span>
+          <span className="tabular">{proven.length} with exemplars</span>
+          <span className="tabular">{mechanicsCount} rules</span>
+          <span className="tabular">{bakeoffs.length} bakeoffs</span>
         </div>
         <nav className={styles.nav} aria-label="Design types">
-          {populated.map(({ type, items }) => (
+          {designTypes.map((type) => (
             <a key={type.id} className={styles.navLink} href={`#${type.id}`}>
               {type.name}
-              <span className={styles.navCount}>{items.length}</span>
             </a>
           ))}
         </nav>
       </header>
 
-      <main>
-        {populated.map(({ type, items }) => (
-          <TypeSection
-            key={type.id}
-            type={type}
-            captures={items}
-            onOpen={setSelected}
-          />
-        ))}
+      <section className={styles.floor} aria-labelledby="craft-floor">
+        <h2 id="craft-floor" className={styles.floorTitle}>
+          Craft floor
+        </h2>
+        <p className={styles.floorNote}>
+          Engineering failures, not stylistic ones. No direction excuses them.
+        </p>
+        <ol className={styles.floorList}>
+          {craftFloor.map((rule, index) => (
+            <li key={rule} className={styles.floorRule}>
+              <span className={`${styles.floorIndex} tabular`}>
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span>{rule}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-        {empty.length > 0 && (
-          <section className={styles.empty} aria-label="Design types with no captures yet">
-            Defined, no captures yet
-            <ul className={styles.emptyList}>
-              {empty.map((type) => (
-                <li key={type.id} className={styles.emptyItem}>
-                  {type.name}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+      <main>
+        {designTypes.map((type, index) => (
+          <TypeSection key={type.id} type={type} index={index} />
+        ))}
       </main>
 
-      {selected && (
-        <CaptureModal
-          key={selected.id}
-          capture={selected}
-          onClose={() => setSelected(null)}
-        />
+      {bakeoffs.length > 0 && (
+        <section className={styles.bakeoffs} aria-labelledby="bakeoffs">
+          <h2 id="bakeoffs" className={styles.floorTitle}>
+            Bakeoffs
+          </h2>
+          <ul className={styles.bakeoffList}>
+            {bakeoffs.map((bakeoff) => (
+              <li key={bakeoff.slug} className={styles.bakeoff}>
+                <a className={styles.bakeoffLink} href={bakeoff.href}>
+                  {bakeoff.title}
+                </a>
+                <span className={`${styles.bakeoffDate} tabular`}>
+                  {bakeoff.generated}
+                </span>
+                <span className={styles.bakeoffDirections}>
+                  {bakeoff.directions.join(' · ')}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
     </div>
   )

@@ -4,17 +4,61 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Purpose
 
-This is a **local-only design reference archive**, not a product. It stores screenshots of websites, landing pages, assets, components, and other visually appealing content collected from sources like awwwards.com.
+This repo is the **design-type registry** — the source of truth for design
+decisions in this project and every other one. It holds rules, not pictures.
 
-Its job is to be a **source of truth for design decisions** — in this repo and in every other project. When building or reviewing UI anywhere, read from this library first to ground typography, spacing, color, motion, and layout choices in concrete captured examples rather than defaults.
+When building or reviewing UI anywhere, read the registry first to ground
+typography, spacing, colour, motion and layout in captured mechanics rather than
+defaults.
 
-Two directions of use:
-- **Positive reference** — patterns worth reproducing (`library/`).
-- **Negative reference** — patterns to avoid (`avoid/`), equally important. Never discard a bad example; file it.
+**Screenshots do not live here.** They live at
+`~/Screenshots/taste-vault/<design-type>/`, outside the repo, untracked and
+unbundled. Nothing in the app reads them. If a screenshot teaches something, the
+rule goes into `src/data/designTypes.js` and the image stays in the vault as a
+memory aid. The repo must stay text-only.
 
-## The browsing app
+## `src/data/designTypes.js` is the archive
 
-`src/` is a local directory UI over the archive, grouped by **design type**. It is a reading tool for the library, not a design example in itself.
+One entry per design type. Five fields carry everything:
+
+| Field | Job |
+|---|---|
+| `summary` | what the mode is, in one paragraph |
+| `vocabulary` | the devices that **are** the type — name these when briefing |
+| `mechanics` | the measurable rules, read off real pages |
+| `never` | the failure modes specific to this type |
+| `exemplars` | `{ site, url, note }` — where the rules came from, no image |
+
+Plus one shared export, `craftFloor`: engineering failures no direction excuses
+(fixed-header offset, placeholder-as-label, measure limits, reduced motion).
+
+Rules that matter:
+
+- **A mechanic must be measurable or falsifiable.** "Nice hierarchy" is
+  worthless. "Display serif near 8rem against 0.8rem labels — a 10:1 ratio"
+  is usable. Name the mechanism: ratio, grid, contrast, easing, ordering.
+- A type with an empty `exemplars` array is **provisional** — its mechanics were
+  derived from the vocabulary, not read off a page. The app badges it. Harden it
+  the first time a real capture lands in its vault folder.
+- **If a capture does not clearly belong to an existing type, ask rather than
+  guessing.** Inventing a near-duplicate type fragments the grouping. `SERIF
+  NOIR` was coined for this archive; every other name came from the user.
+- Adding a type means adding a vault folder: `~/Screenshots/taste-vault/<id>/`.
+
+## The vault
+
+```
+~/Screenshots/taste-vault/<design-type-id>/<site-slug>--<what>.png
+```
+
+Flat, one folder per design type, no sidecars, no `library/` vs `avoid/` split —
+an anti-pattern is recorded as a line in that type's `never` array, not as a
+directory. Filenames are the only metadata. Anything worth remembering about a
+screenshot belongs in `designTypes.js` before the screenshot is worth keeping.
+
+## The app
+
+`src/` renders the registry. It is a reading tool, not a design example.
 
 ```bash
 npm run dev       # dev server
@@ -23,94 +67,47 @@ npm run preview   # serve the build
 npm run lint      # eslint .
 ```
 
-Stack: Vite 8, React 19 (React Compiler enabled via `@rolldown/plugin-babel` in `vite.config.js`), ESLint flat config, CSS Modules. No TypeScript, no test runner, no Tailwind — adding any of those is a dependency decision, discuss first. The app has no runtime dependencies beyond React.
+Stack: Vite 8, React 19 (React Compiler via `@rolldown/plugin-babel` in
+`vite.config.js`), ESLint flat config, CSS Modules. No TypeScript, no test
+runner, no Tailwind — adding any of those is a dependency decision, discuss
+first. No runtime dependencies beyond React.
 
 ```
 src/
-  data/designTypes.js   # the genre registry: summary + vocabulary per type
-  data/captures.js      # one entry per capture — the app's whole content model
-  lib/images.js         # import.meta.glob over /library and /avoid
-  components/           # CaptureCard, CaptureModal, TypeSection, StarIcon
+  data/designTypes.js       # the only content file
+  components/TypeSection    # one panel per type
+  App.jsx                   # masthead, craft floor, types
 ```
 
-**`src/data/captures.js` is the file you edit most.** Every capture needs `image`,
-`sidecar`, `title`, `site`, `url`, `typeId`, `categories`, `tags`, `brief` and
-`recipe`. `image` is the repo-root-relative path (`/library/...`), resolved to a
-bundled URL by the glob in `src/lib/images.js` — the archive deliberately lives
-outside `src/`, so the glob reaches up to the project root.
+Nothing globs outside `src/`. If you find yourself adding an image glob, stop —
+that is the thing this layout exists to prevent.
 
-Adding a capture is two steps: file the `.png` + `.md` under `library/`, then add
-the entry to `captures.js`. Nothing is derived from the sidecars at build time;
-the sidecar is the durable record and `captures.js` is the app's index of it.
-Keep them consistent by hand.
+## Bakeoffs
 
-### Design types
+Bakeoff output is **local-only and never committed**. The `design-bakeoff` skill
+writes to `~/dev/demos/taste-vault/<idea-slug>/` — a shared `BRIEF.md`, five
+`directions/vN.md` contracts, five `vN/` folders holding `impeccable.html` and
+`taste.html`, a `manifest.json`, and a generated `index.html` split viewer.
+Scope is a full landing page on a fixed seven-section spine.
 
-Types are the app's top-level grouping and live in `src/data/designTypes.js`.
-Each has a `summary` (what the mode is) and a `vocabulary` list (the terms needed
-to brief or critique it). Types with no captures yet are still listed, so the
-vocabulary exists before an example arrives.
+`bakeoffs/` is gitignored here as a guard against it drifting back in.
 
-**If a capture does not clearly belong to an existing type, ask rather than
-guessing.** Inventing a near-duplicate type fragments the grouping. `SERIF NOIR`
-was coined for this archive; every other type name came from the user.
+## Using the registry when building UI
 
-### Image recipes
+1. Pick the design type, or ask which one applies.
+2. Read its `summary` + `vocabulary` to brief, its `mechanics` to build, its
+   `never` to review.
+3. Check `craftFloor` before shipping.
+4. Cite what you drew from — `designTypes.js → SERIF NOIR → mechanics[3]` — when
+   explaining a choice.
 
-Each capture carries a `recipe` for regenerating comparable art:
-`recipe.subject` fills the `[SUBJECT]` slot in `recipe.prompt`, and the modal's
-**Copy image prompt** button emits the joined string for Higgsfield
-`gpt_image_2`. Prompts state a STRICT palette and reserve empty space for
-typography — keep that convention when writing new ones.
-
-## Archive layout
-
-Screenshots live outside `src/`, so the build never bundles them:
-
-```
-library/<category>/<source-slug>/        # e.g. library/landing-pages/linear-com/
-  <name>.png                             # the capture
-  <name>.md                              # required sidecar
-avoid/<category>/<source-slug>/          # same shape, for anti-patterns
-```
-
-Categories are created as needed (`landing-pages/`, `components/`, `typography/`, `motion/`, `color/`, `assets/`, …). Keep the slug tied to the origin site so provenance survives.
-
-## Sidecar metadata (required)
-
-Every capture gets a `.md` file with the same basename. Without it an image is unsearchable and useless as a reference. Format:
-
-```markdown
----
-source: https://example.com/pricing
-captured: 2026-09-17
-category: landing-pages
-verdict: adopt | avoid
-tags: [dark-mode, split-hero, serif-display, scroll-reveal]
----
-
-What works (or fails) and **why** — the transferable rule, not a description of the picture.
-Name the mechanism: type scale ratio, grid, contrast, easing, hierarchy.
-```
-
-Rules that matter:
-- `verdict` must match the directory (`library/` = adopt, `avoid/` = avoid).
-- `captured` is an absolute date, never relative.
-- The body must state a **reusable principle**. "Nice hero" is worthless; "display serif at ~7rem against 1rem body sets a 7:1 scale that carries the whole page" is usable.
-- Tags are the primary retrieval path — be liberal and consistent with existing tags.
-
-## Using the library when building UI
-
-Before writing UI in any project:
-1. Grep the sidecar `.md` files by tag/keyword for the pattern at hand.
-2. Read the matching sidecars, then view the images with the Read tool for the actual visual.
-3. Check `avoid/` for the same tags — knowing the failure mode is as valuable as the model.
-4. Cite the reference you drew from (`library/components/stripe-com/nav.md`) when explaining a design choice.
-
-Never invent a design principle and attribute it here. If the library has no relevant entry, say so and design from first principles instead.
+Never invent a design principle and attribute it here. If the registry has no
+relevant entry, say so and design from first principles instead.
 
 ## Git
 
-Local-only repository — there is no remote. Commit directly to `main`; the global "always open a PR" rule does not apply here. Image binaries are committed intentionally; do not add `*.png` to `.gitignore`.
+Local-only repository — there is no remote. Commit directly to `main`; the
+global "always open a PR" rule does not apply here.
 
-Commit types for archive work: `docs:` for sidecar/metadata edits, `chore:` for adding or reorganizing captures, `feat:`/`fix:` reserved for the browsing app.
+Commit types: `docs:` for registry edits, `chore:` for reorganisation,
+`feat:`/`fix:` for the app.

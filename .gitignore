@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Vendored skill payloads — reinstallable from skills-lock.json, not repo content
+.agents/
+.claude/skills/
+
+# Bakeoff output is local-only — it lives in ~/dev/demos/taste-vault/
+bakeoffs/
