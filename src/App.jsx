@@ -1,9 +1,17 @@
 import { craftFloor, designTypes } from './data/designTypes.js'
 import { TypeSection } from './components/TypeSection.jsx'
+import { useVault } from './hooks/useVault.js'
 import styles from './App.module.css'
 
 export function App() {
-  const proven = designTypes.filter((type) => type.exemplars.length > 0)
+  const vault = useVault()
+  const complete = designTypes.filter(
+    (type) => type.aesthetics && type.palette?.length,
+  )
+  const captureCount = Object.values(vault).reduce(
+    (total, files) => total + files.length,
+    0,
+  )
   const mechanicsCount = designTypes.reduce(
     (total, type) => total + type.mechanics.length + type.never.length,
     0,
@@ -21,8 +29,11 @@ export function App() {
         </p>
         <div className={styles.stats}>
           <span className="tabular">{designTypes.length} types</span>
-          <span className="tabular">{proven.length} with exemplars</span>
+          <span className="tabular">{complete.length} fully specified</span>
           <span className="tabular">{mechanicsCount} rules</span>
+          {captureCount > 0 && (
+            <span className="tabular">{captureCount} captures</span>
+          )}
         </div>
         <nav className={styles.nav} aria-label="Design types">
           {designTypes.map((type) => (
@@ -54,7 +65,12 @@ export function App() {
 
       <main>
         {designTypes.map((type, index) => (
-          <TypeSection key={type.id} type={type} index={index} />
+          <TypeSection
+            key={type.id}
+            type={type}
+            index={index}
+            captures={vault[type.id] ?? []}
+          />
         ))}
       </main>
 

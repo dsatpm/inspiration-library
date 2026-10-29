@@ -1,0 +1,115 @@
+.dialog {
+  width: min(96vw, 1400px);
+  max-width: none;
+  max-height: 92vh;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--ground-card);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 0.78);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.type {
+  font-size: var(--step-3);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.file {
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  color: var(--ink-faint);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.count {
+  margin-right: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  color: var(--ink-faint);
+}
+
+.step,
+.close {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  color: var(--ink-dim);
+  cursor: pointer;
+}
+
+.step:hover,
+.close:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.stage {
+  display: grid;
+  place-items: center;
+  max-height: 72vh;
+  padding: 1.1rem;
+  overflow: auto;
+  /* The vault holds full-page captures; a checker-free flat ground keeps the
+     screenshot's own edges readable against the panel. */
+  background: var(--ground);
+}
+
+.image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.8rem 1.1rem;
+  border-top: 1px solid var(--line);
+}
+
+.path {
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  color: var(--ink-dim);
+  overflow-wrap: anywhere;
+}
+
+.note {
+  font-size: var(--step-1);
+  color: var(--ink-faint);
+}
